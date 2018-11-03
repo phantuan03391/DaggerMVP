@@ -5,7 +5,7 @@ import com.example.kyo.daggermvp.ui.base.BasePresenter;
 import com.example.kyo.daggermvp.ui.base.BaseView;
 
 public interface BlogDetailContract {
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
         void loadBlogDetail(String id);
     }
 

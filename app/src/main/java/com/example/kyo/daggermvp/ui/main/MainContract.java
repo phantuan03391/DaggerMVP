@@ -7,7 +7,7 @@ import com.example.kyo.daggermvp.ui.base.BaseView;
 import java.util.List;
 
 public interface MainContract {
-    interface Presenter extends BasePresenter {
+    interface Presenter extends BasePresenter<View> {
         void loadBlogArticle(int start);
     }
 

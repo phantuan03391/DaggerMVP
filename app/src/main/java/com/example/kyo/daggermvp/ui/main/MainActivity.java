@@ -15,8 +15,7 @@ import com.example.kyo.daggermvp.App;
 import com.example.kyo.daggermvp.R;
 import com.example.kyo.daggermvp.adapter.ArticleAdapter;
 import com.example.kyo.daggermvp.data.model.Article;
-import com.example.kyo.daggermvp.di.component.DaggerMainActivityComponent;
-import com.example.kyo.daggermvp.di.module.MainActivityModule;
+import com.example.kyo.daggermvp.di.component.DaggerAppComponent;
 import com.example.kyo.daggermvp.impl.OnMainClickedListener;
 import com.example.kyo.daggermvp.ui.detail.BlogDetailActivity;
 
@@ -48,9 +47,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void addControls() {
-        DaggerMainActivityComponent.builder()
+        DaggerAppComponent.builder()
                 .netComponent(((App) getApplicationContext()).getNetComponent())
-                .mainActivityModule(new MainActivityModule(this))
                 .build().inject(this);
 
         swipeRefreshLayout = findViewById(R.id.swipeToRefresh);
@@ -70,7 +68,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void getBlogArticle() {
-        mainPresenter.loadBlogArticle(0);
+        mainPresenter.takeView(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mainPresenter.dropView();
     }
 
     @Override

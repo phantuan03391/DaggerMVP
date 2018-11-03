@@ -1,23 +1,32 @@
 package com.example.kyo.daggermvp.ui.detail;
 
 import com.example.kyo.daggermvp.data.api.DemoApiService;
-import com.example.kyo.daggermvp.data.api.RetrofitClient;
+import com.example.kyo.daggermvp.data.model.Article;
 
+import javax.inject.Inject;
+
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Retrofit;
 
 public class BlogDetailPresenter implements BlogDetailContract.Presenter {
     private BlogDetailContract.View view;
     private CompositeDisposable compositeDisposable;
-    private DemoApiService apiService;
+    private Retrofit retrofit;
 
-    public BlogDetailPresenter(BlogDetailContract.View view) {
-        this.view = view;
-        view.setPresenter(this);
+//    public BlogDetailPresenter(BlogDetailContract.View view) {
+//        this.view = view;
+//        view.setPresenter(this);
+//        compositeDisposable = new CompositeDisposable();
+//    }
+
+    @Inject
+    public BlogDetailPresenter(Retrofit retrofit) {
+        this.retrofit = retrofit;
         compositeDisposable = new CompositeDisposable();
-        apiService = RetrofitClient.getRetrofit().create(DemoApiService.class);
     }
 
     @Override
@@ -26,8 +35,7 @@ public class BlogDetailPresenter implements BlogDetailContract.Presenter {
 
         compositeDisposable.clear();
 
-        Disposable disposable = apiService.getBlogDetail(id)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        Disposable disposable = getBlogDetail(id)
                 .subscribe(
                         article -> {
                             view.hideLoadingUi();
@@ -40,13 +48,20 @@ public class BlogDetailPresenter implements BlogDetailContract.Presenter {
         compositeDisposable.add(disposable);
     }
 
-    @Override
-    public void subscribe() {
-
+    private Observable<Article> getBlogDetail(String id) {
+        return retrofit.create(DemoApiService.class).getBlogDetail(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     @Override
-    public void unsubscribe() {
+    public void takeView(BlogDetailContract.View view) {
+        this.view = view;
+    }
+
+    @Override
+    public void dropView() {
         compositeDisposable.clear();
+        this.view = null;
     }
 }

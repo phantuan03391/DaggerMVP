@@ -21,9 +21,8 @@ public class MainPresenter implements MainContract.Presenter {
 //    private DemoApiService apiService;
 
     @Inject
-    public MainPresenter(Retrofit retrofit, MainContract.View mainView) {
+    public MainPresenter(Retrofit retrofit) {
         this.retrofit = retrofit;
-        this.mainView = mainView;
         compositeDisposable = new CompositeDisposable();
 //        apiService = RetrofitClient.getRetrofit().create(DemoApiService.class);
 //        mainView.setPresenter(this);
@@ -52,12 +51,14 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void subscribe() {
+    public void takeView(MainContract.View view) {
+        this.mainView = view;
         loadBlogArticle(0);
     }
 
     @Override
-    public void unsubscribe() {
+    public void dropView() {
         compositeDisposable.clear();
+        mainView = null;
     }
 }

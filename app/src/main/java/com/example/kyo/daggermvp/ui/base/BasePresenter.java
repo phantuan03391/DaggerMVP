@@ -1,7 +1,7 @@
 package com.example.kyo.daggermvp.ui.base;
 
-public interface BasePresenter {
-    void subscribe();
+public interface BasePresenter<T> {
+    void takeView(T view);
 
-    void unsubscribe();
+    void dropView();
 }

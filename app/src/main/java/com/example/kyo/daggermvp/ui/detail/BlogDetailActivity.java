@@ -5,14 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.kyo.daggermvp.App;
 import com.example.kyo.daggermvp.R;
 import com.example.kyo.daggermvp.data.model.Article;
+import com.example.kyo.daggermvp.di.component.DaggerAppComponent;
+
+import javax.inject.Inject;
 
 public class BlogDetailActivity extends AppCompatActivity implements BlogDetailContract.View {
     private static final String TAG = "kyo";
     private String articleId;
     private TextView tvDetailTitle;
-    private BlogDetailContract.Presenter presenter;
+
+    @Inject
+    BlogDetailPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,14 +31,28 @@ public class BlogDetailActivity extends AppCompatActivity implements BlogDetailC
     private void addEvents() {
         tvDetailTitle.setText(articleId);
 
+        getBlogDetail();
+    }
+
+    private void getBlogDetail(){
+        presenter.takeView(this);
         presenter.loadBlogDetail(articleId);
     }
 
     private void addControls() {
-        presenter = new BlogDetailPresenter(this);
+        DaggerAppComponent.builder()
+                .netComponent(((App) getApplicationContext()).getNetComponent())
+                .build().inject(this);
+
         articleId = getIntent().getStringExtra("article_id");
 
         tvDetailTitle = findViewById(R.id.tvDetailTitle);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        presenter.dropView();
     }
 
     @Override
