@@ -13,7 +13,5 @@ public interface BlogDetailContract {
         void showBlogDetail(Article article);
 
         void showError(Throwable throwable);
-
-        void setPresenter(Presenter presenter);
     }
 }

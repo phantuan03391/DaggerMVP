@@ -1,25 +1,19 @@
 package com.example.kyo.daggermvp;
 
-import android.app.Application;
+import com.example.kyo.daggermvp.di.component.DaggerAppComponent;
 
-import com.example.kyo.daggermvp.di.component.DaggerNetComponent;
-import com.example.kyo.daggermvp.di.component.NetComponent;
-import com.example.kyo.daggermvp.di.module.AppModule;
-import com.example.kyo.daggermvp.di.module.NetworkModule;
+import dagger.android.AndroidInjector;
+import dagger.android.DaggerApplication;
 
-public class App extends Application {
-    private NetComponent netComponent;
+public class App extends DaggerApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
-        netComponent = DaggerNetComponent.builder()
-                .appModule(new AppModule(this))
-                .networkModule(new NetworkModule())
-                .build();
     }
 
-    public NetComponent getNetComponent() {
-        return netComponent;
+    @Override
+    protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
+        return DaggerAppComponent.builder().application(this).build();
     }
 }

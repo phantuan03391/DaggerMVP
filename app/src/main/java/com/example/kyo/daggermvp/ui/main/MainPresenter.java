@@ -2,6 +2,7 @@ package com.example.kyo.daggermvp.ui.main;
 
 import com.example.kyo.daggermvp.data.api.DemoApiService;
 import com.example.kyo.daggermvp.data.model.Article;
+import com.example.kyo.daggermvp.di.ActivityScope;
 
 import java.util.List;
 
@@ -14,18 +15,16 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
+@ActivityScope
 public class MainPresenter implements MainContract.Presenter {
     private MainContract.View mainView;
     private Retrofit retrofit;
     private CompositeDisposable compositeDisposable;
-//    private DemoApiService apiService;
 
     @Inject
     public MainPresenter(Retrofit retrofit) {
         this.retrofit = retrofit;
         compositeDisposable = new CompositeDisposable();
-//        apiService = RetrofitClient.getRetrofit().create(DemoApiService.class);
-//        mainView.setPresenter(this);
     }
 
     @Override

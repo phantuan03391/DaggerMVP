@@ -2,6 +2,7 @@ package com.example.kyo.daggermvp.ui.detail;
 
 import com.example.kyo.daggermvp.data.api.DemoApiService;
 import com.example.kyo.daggermvp.data.model.Article;
+import com.example.kyo.daggermvp.di.ActivityScope;
 
 import javax.inject.Inject;
 
@@ -12,16 +13,11 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
+@ActivityScope
 public class BlogDetailPresenter implements BlogDetailContract.Presenter {
     private BlogDetailContract.View view;
     private CompositeDisposable compositeDisposable;
     private Retrofit retrofit;
-
-//    public BlogDetailPresenter(BlogDetailContract.View view) {
-//        this.view = view;
-//        view.setPresenter(this);
-//        compositeDisposable = new CompositeDisposable();
-//    }
 
     @Inject
     public BlogDetailPresenter(Retrofit retrofit) {
